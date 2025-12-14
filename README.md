@@ -1,124 +1,107 @@
-# food101recognition
-Explainable Food Recognition (Food-101)
+# 🍽️ Explainable Food Recognition (Food-101)
 
-This project builds a food image classification model using ResNet34 and explains its predictions using Grad-CAM.
+This project builds a **food image classification model** using deep learning and explains its predictions with **Grad-CAM**.
 
-The goal is not only to classify food images, but also to understand why the model makes correct or incorrect predictions.
+The focus is **not only accuracy**, but also **understanding why the model makes correct or incorrect predictions**.
 
-What This Project Does
+---
 
-Trains a food classifier on the Food-101 dataset
+## 📌 Project Overview
 
-Uses transfer learning with a pretrained ResNet34
+- Dataset: **Food-101**
+- Model: **ResNet34 (ImageNet pretrained)**
+- Method: **Transfer Learning + Grad-CAM**
+- Goal:  
+  - Classify food images  
+  - Visualize where the model is looking  
+  - Analyze why misclassifications happen  
 
-Applies Grad-CAM to visualize model attention
+---
 
-Analyzes misclassified samples to understand model errors
+## 📂 Dataset
 
-Dataset
+**Food-101**
+- 101 food categories  
+- 1,000 images per class  
+- Balanced dataset  
+- Many visually similar dishes (e.g., seafood, desserts, breakfast foods)
 
-Food-101
+---
 
-101 food categories
+## 🧠 Model Architecture
 
-1,000 images per class
+- Backbone: **ResNet34 pretrained on ImageNet**
+- Final fully connected layer replaced with **101 output classes**
 
-Balanced dataset
+---
 
-Many visually similar classes (e.g. seafood, desserts)
+## 🔁 Training Strategy
 
-Model
+The model is trained in **two stages**:
 
-Backbone: ResNet34 pretrained on ImageNet
+### Stage 1 – Train Classifier Head
+- Freeze the ResNet34 backbone
+- Train only the final fully connected (FC) layer
+- Purpose: adapt ImageNet features to Food-101
 
-Final fully connected layer replaced for 101 food classes
+### Stage 2 – Fine-tuning
+- Unfreeze the last ResNet block (`layer4`)
+- Fine-tune `layer4 + FC` with a smaller learning rate
+- Purpose: improve food-specific feature representation
 
-Training Strategy
+---
 
-The model is trained in two stages:
-
-Stage 1 – Train Classifier Head
-
-Freeze the ResNet34 backbone
-
-Train only the final fully connected (FC) layer
-
-Purpose: adapt ImageNet features to Food-101
-
-Stage 2 – Fine-tuning
-
-Unfreeze the last ResNet block (layer4)
-
-Fine-tune layer4 + FC with a smaller learning rate
-
-Purpose: improve high-level food feature representation
-
-Evaluation
+## 📊 Evaluation
 
 The model is evaluated using:
+- **Accuracy**
+- **Macro F1-score**
 
-Accuracy
+Stage 2 shows clear improvement over Stage 1 and more balanced performance across classes.
 
-Macro F1-score
+---
 
-Stage 2 improves performance significantly compared to Stage 1 and shows more balanced results across classes.
-
-Explainability with Grad-CAM
+## 🔍 Explainability with Grad-CAM
 
 Grad-CAM is used to:
+- Visualize **class-specific attention**
+- Show which image regions influence predictions
+- Explain both **correct predictions** and **errors**
 
-Visualize which image regions influence predictions
+Grad-CAM is applied to the **last convolutional layer** of ResNet34.
 
-Explain why predictions are correct
+---
 
-Analyze why misclassifications happen
+## ❌ Misclassification Analysis
 
-Grad-CAM is applied to the last convolutional layer of ResNet34.
+For misclassified samples, Grad-CAM reveals that:
+- The model focuses on **visually dominant or shared ingredients**
+- Visually similar dishes cause confusion
+- Errors are **systematic**, not random
 
-Misclassification Analysis
+Examples:
+- Seafood dishes confused due to similar textures
+- Breakfast dishes confused due to similar crispy bases
 
-For misclassified samples, Grad-CAM shows that:
+---
 
-The model often focuses on shared or visually dominant ingredients
+## ⚠️ Limitations
 
-Visually similar dishes can confuse the model
+- Single-label classification
+- No ingredient-level supervision
+- Grad-CAM provides coarse explanations
 
-Errors are systematic, not random
+---
 
-Example patterns:
+## 🚀 Possible Improvements
 
-Seafood dishes confused due to similar textures
+- Multi-label classification
+- Ingredient or part-based detection
+- Higher input resolution
+- Stronger data augmentation
 
-Breakfast dishes confused due to similar crispy bases
+---
 
-What This Project Shows
+## ✅ Summary
 
-Accuracy alone is not enough to understand model behavior
-
-Grad-CAM provides useful visual explanations
-
-The model relies heavily on visually salient regions
-
-Explainability helps identify model limitations
-
-Limitations
-
-Single-label classification
-
-No ingredient-level supervision
-
-Grad-CAM provides coarse (not pixel-perfect) explanations
-
-Possible Improvements
-
-Multi-label classification
-
-Ingredient or part-based detection
-
-Higher input resolution
-
-Stronger data augmentation
-
-Summary
-
-This project demonstrates how Explainable AI techniques like Grad-CAM can be used to better understand deep learning models for food recognition, beyond just reporting accuracy.
+This project demonstrates how **Explainable AI techniques** such as Grad-CAM can be used to better understand deep learning models for food recognition, beyond simply reporting accuracy.
